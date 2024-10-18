@@ -1,6 +1,8 @@
 import numpy as np
+import streamlit
 
 
+@streamlit.cache_data
 def fetch_medal_tally(df, year, country):
     medal_df = df.drop_duplicates(subset=['Team', 'NOC', 'Games', 'Year', 'City', 'Sport', 'Event', 'Medal'])
     flag = 0
@@ -29,7 +31,7 @@ def fetch_medal_tally(df, year, country):
 
     return x
 
-
+@streamlit.cache_data
 def country_year_list(df):
     years = df['Year'].unique().tolist()
     years.sort()
@@ -41,13 +43,14 @@ def country_year_list(df):
 
     return years,country
 
+@streamlit.cache_data
 def data_over_time(df,col):
 
     nations_over_time = df.drop_duplicates(['Year', col])['Year'].value_counts().reset_index().sort_values('Year')
     nations_over_time.rename(columns={'Year': 'Year', 'count': col}, inplace=True)
     return nations_over_time
 
-
+@streamlit.cache_data
 def most_successful(df, sport):
     temp_df = df.dropna(subset=['Medal'])
 
@@ -59,6 +62,7 @@ def most_successful(df, sport):
     x.rename(columns={'Name': 'Name', 'count': 'Medals'}, inplace=True)
     return x
 
+@streamlit.cache_data
 def yearwise_medal_tally(df,country):
     temp_df = df.dropna(subset=['Medal'])
     temp_df.drop_duplicates(subset=['Team', 'NOC', 'Games', 'Year', 'City', 'Sport', 'Event', 'Medal'], inplace=True)
@@ -68,6 +72,7 @@ def yearwise_medal_tally(df,country):
 
     return final_df
 
+@streamlit.cache_data
 def country_event_heatmap(df,country):
     temp_df = df.dropna(subset=['Medal'])
     temp_df.drop_duplicates(subset=['Team', 'NOC', 'Games', 'Year', 'City', 'Sport', 'Event', 'Medal'], inplace=True)
@@ -77,7 +82,7 @@ def country_event_heatmap(df,country):
     pt = new_df.pivot_table(index='Sport', columns='Year', values='Medal', aggfunc='count').fillna(0)
     return pt
 
-
+@streamlit.cache_data
 def most_successful_countrywise(df, country):
     temp_df = df.dropna(subset=['Medal'])
 
@@ -88,6 +93,7 @@ def most_successful_countrywise(df, country):
     x.rename(columns={'Name': 'Name', 'count': 'Medals'}, inplace=True)
     return x
 
+@streamlit.cache_data
 def weight_v_height(df,sport):
     athlete_df = df.drop_duplicates(subset=['Name', 'region'])
     athlete_df['Medal'].fillna('No Medal', inplace=True)
@@ -97,6 +103,7 @@ def weight_v_height(df,sport):
     else:
         return athlete_df
 
+@streamlit.cache_data
 def men_vs_women(df):
     athlete_df = df.drop_duplicates(subset=['Name', 'region'])
 
